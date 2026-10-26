@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Online Quiz Application</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <h1>Student Online Quiz</h1>
+    <p>Online Examination Portal</p>
+</header>
+
+<main class="container">
+
+    <!-- LOGIN -->
+    <section id="loginPage" class="card">
+        <h2>Student Login</h2>
+        <p class="muted">Enter your credentials to continue.</p>
+
+        <form id="loginForm">
+            <label for="studentId">Student ID</label>
+            <input id="studentId" type="text"
+                   placeholder="Enter Student ID" required>
+
+            <label for="password">Password</label>
+            <input id="password" type="password"
+                   placeholder="Enter Password" required>
+
+            <label for="captchaInput">CAPTCHA Verification</label>
+            <div class="captcha-row">
+                <span id="captchaText"></span>
+                <button type="button" id="refreshCaptcha"
+                        class="light-btn">Refresh</button>
+            </div>
+
+            <input id="captchaInput" type="text"
+                   placeholder="Enter CAPTCHA" required>
+
+            <p id="loginMessage" class="error"></p>
+            <button type="submit" class="primary-btn full">
+                Login
+            </button>
+        </form>
+
+        <div class="demo-box">
+            Demo Student ID: <b>STUDENT</b><br>
+            Demo Password: <b>12345</b>
+        </div>
+    </section>
+
+    <!-- INSTRUCTIONS -->
+    <section id="instructionsPage" class="card hidden">
+        <h2>Quiz Instructions</h2>
+        <p>Welcome, <b id="welcomeName"></b>!</p>
+
+        <div class="info-grid">
+            <div class="info-box">
+                <span>Questions</span>
+                <strong>10</strong>
+            </div>
+            <div class="info-box">
+                <span>Duration</span>
+                <strong>10 min</strong>
+            </div>
+            <div class="info-box">
+                <span>Total Marks</span>
+                <strong>10</strong>
+            </div>
+        </div>
+
+        <ul class="instructions">
+            <li>Each question carries one mark.</li>
+            <li>Select one answer for each question.</li>
+            <li>Answers are saved automatically.</li>
+            <li>You can revisit previous questions.</li>
+            <li>You can navigate using the question palette.</li>
+            <li>The quiz submits automatically when time expires.</li>
+            <li>Submitted answers cannot be changed.</li>
+        </ul>
+
+        <button id="startQuiz" class="primary-btn full">
+            Start Quiz
+        </button>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quizPage" class="card hidden">
+        <div class="quiz-header">
+            <div>
+                <h2>Online Examination</h2>
+                <p id="studentName" class="muted"></p>
+            </div>
+            <div id="timer" class="timer">10:00</div>
+        </div>
+
+        <div class="progress-info">
+            <span id="questionCount">Question 1 of 10</span>
+            <span id="answeredCount">Answered: 0</span>
+        </div>
+
+        <div class="progress-track">
+            <div id="progressBar"></div>
+        </div>
+
+        <div class="question-box">
+            <h3 id="questionText"></h3>
+            <div id="optionsArea"></div>
+        </div>
+
+        <div class="palette-heading">
+            <h3>Question Palette</h3>
+            <span class="muted">Select a number to visit a question.</span>
+        </div>
+
+        <div id="questionPalette" class="palette"></div>
+
+        <div class="legend">
+            <span><i class="dot green"></i> Answered</span>
+            <span><i class="dot blue"></i> Current</span>
+            <span><i class="dot grey"></i> Unanswered</span>
+        </div>
+
+        <div class="navigation">
+            <button id="previousBtn" class="light-btn">← Previous</button>
+            <button id="nextBtn" class="primary-btn">Next →</button>
+        </div>
+
+        <button id="submitBtn" class="submit-btn full">
+            Submit Quiz
+        </button>
+
+        <p id="saveStatus" class="save-status">
+            Your answers will be saved automatically.
+        </p>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="resultPage" class="card hidden">
+        <div class="result-icon">✓</div>
+        <h2 id="resultHeading">Quiz Submitted Successfully!</h2>
+        <p id="resultStudent" class="muted"></p>
+
+        <div class="result-box">
+            <p>Your Final Score</p>
+            <h1 id="scoreText">0 / 10</h1>
+            <h3 id="percentageText">0%</h3>
+        </div>
+
+        <div class="result-grid">
+            <div class="result-stat correct-stat">
+                <span>Correct</span>
+                <strong id="correctText">0</strong>
+            </div>
+            <div class="result-stat wrong-stat">
+                <span>Incorrect</span>
+                <strong id="wrongText">0</strong>
+            </div>
+            <div class="result-stat unanswered-stat">
+                <span>Unanswered</span>
+                <strong id="unansweredText">0</strong>
+            </div>
+        </div>
+
+        <h3 class="review-heading">Answer Review</h3>
+        <div id="reviewArea"></div>
+
+        <button id="restartBtn" class="primary-btn full">
+            Back to Login
+        </button>
+    </section>
+
+</main>
+
+<footer>
+    <p>Student Online Quiz Application | Academic Project</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
