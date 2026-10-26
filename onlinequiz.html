@@ -1,0 +1,786 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Quiz Application</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f4fa;
+    color: #243047;
+}
+
+header {
+    background: #173b72;
+    color: white;
+    text-align: center;
+    padding: 24px;
+}
+
+header h1 {
+    margin-bottom: 8px;
+}
+
+.container {
+    width: 92%;
+    max-width: 1000px;
+    margin: 30px auto;
+    min-height: 65vh;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px #00000012;
+}
+
+h2 {
+    color: #173b72;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin: 15px 0 7px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+button {
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 11px 17px;
+    margin-top: 15px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+button:hover {
+    background: #174bb5;
+}
+
+.secondary {
+    background: #64748b;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.message {
+    color: #dc2626;
+    margin-top: 12px;
+}
+
+.hint {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.captcha-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+#captchaText {
+    background: #e2eaf8;
+    padding: 12px 18px;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 5px;
+    color: #173b72;
+}
+
+#loginForm > button {
+    width: 100%;
+}
+
+li {
+    margin: 12px 0 12px 22px;
+}
+
+.quiz-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.timer {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 12px;
+    border-radius: 7px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.quiz-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+#questionText {
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px;
+    margin: 12px 0;
+    border: 1px solid #dbe3ef;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: #eff6ff;
+}
+
+.option input {
+    width: auto;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+#questionPalette {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.palette-button {
+    margin: 0;
+    padding: 10px 5px;
+    background: #e2e8f0;
+    color: #243047;
+}
+
+.palette-button.answered {
+    background: #16a34a;
+    color: white;
+}
+
+.palette-button.current {
+    outline: 3px solid #2563eb;
+}
+
+.submit-btn {
+    width: 100%;
+    background: #dc2626;
+}
+
+.score-circle {
+    width: 140px;
+    height: 140px;
+    margin: 20px auto;
+    background: #dbeafe;
+    border: 6px solid #2563eb;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #173b72;
+}
+
+#score {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+#resultName, #resultMessage {
+    text-align: center;
+    margin: 12px 0;
+}
+
+.review-item {
+    padding: 15px;
+    margin: 12px 0;
+    border-radius: 7px;
+    background: #f8fafc;
+    border-left: 5px solid #cbd5e1;
+}
+
+.review-item.correct {
+    border-left-color: #16a34a;
+}
+
+.review-item.incorrect {
+    border-left-color: #dc2626;
+}
+
+.review-item p {
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+#restartBtn {
+    width: 100%;
+}
+
+footer {
+    background: #173b72;
+    color: white;
+    text-align: center;
+    padding: 18px;
+}
+
+@media (max-width: 700px) {
+    .quiz-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .quiz-top {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    #questionPalette {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Online Quiz Application</h1>
+    <p>Student Portal</p>
+</header>
+
+<main class="container">
+
+    <!-- LOGIN PAGE -->
+    <section id="loginPage" class="card">
+        <h2>Student Login</h2>
+
+        <form id="loginForm">
+            <label for="studentId">Student ID</label>
+            <input type="text" id="studentId"
+                   placeholder="Enter Student ID" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password"
+                   placeholder="Enter Password" required>
+
+            <label>Captcha</label>
+            <div class="captcha-row">
+                <span id="captchaText"></span>
+                <button type="button" id="refreshCaptcha"
+                        class="secondary">Refresh</button>
+            </div>
+
+            <input type="text" id="captchaInput"
+                   placeholder="Enter Captcha" required>
+
+            <button type="submit">Login</button>
+            <p id="loginMessage" class="message"></p>
+        </form>
+
+        <p class="hint">Demo ID: STUDENT | Password: 12345</p>
+    </section>
+
+    <!-- INSTRUCTIONS -->
+    <section id="instructionsPage" class="card hidden">
+        <h2>Quiz Instructions</h2>
+        <p>Welcome, <strong id="welcomeName"></strong>!</p>
+
+        <ul>
+            <li>Total questions: 10</li>
+            <li>Each question carries 1 mark.</li>
+            <li>Time limit: 10 minutes.</li>
+            <li>Select one answer for each question.</li>
+            <li>You can navigate between questions.</li>
+            <li>Answers are saved automatically.</li>
+        </ul>
+
+        <button id="startQuiz">Start Quiz</button>
+        <button id="logoutBtn" class="secondary">Logout</button>
+    </section>
+
+    <!-- QUIZ PAGE -->
+    <section id="quizPage" class="hidden">
+        <div class="card quiz-top">
+            <div>
+                <h2>Online Examination</h2>
+                <p id="questionCounter"></p>
+            </div>
+            <div class="timer">
+                Time Left: <span id="timer">10:00</span>
+            </div>
+        </div>
+
+        <div class="quiz-layout">
+            <div class="card">
+                <h3 id="questionText"></h3>
+                <div id="optionsContainer"></div>
+
+                <div class="navigation">
+                    <button id="previousBtn" class="secondary">
+                        Previous
+                    </button>
+                    <button id="nextBtn">Next</button>
+                </div>
+            </div>
+
+            <aside class="card">
+                <h3>Question Palette</h3>
+                <p class="hint">Green = Answered</p>
+                <p class="hint">Blue outline = Current</p>
+
+                <div id="questionPalette"></div>
+
+                <button id="submitBtn" class="submit-btn">
+                    Submit Quiz
+                </button>
+            </aside>
+        </div>
+    </section>
+
+    <!-- RESULTS PAGE -->
+    <section id="resultsPage" class="card hidden">
+        <h2>Quiz Results</h2>
+        <p id="resultName"></p>
+
+        <div class="score-circle">
+            <span id="score"></span>
+            <small>Score</small>
+        </div>
+
+        <p id="resultMessage"></p>
+        <div id="reviewContainer"></div>
+
+        <button id="restartBtn">Back to Login</button>
+    </section>
+
+</main>
+
+<footer>
+    <p>Online Quiz Application | Student Project</p>
+</footer>
+
+<script>
+// PAGE ELEMENTS
+const loginPage = document.getElementById("loginPage");
+const instructionsPage = document.getElementById("instructionsPage");
+const quizPage = document.getElementById("quizPage");
+const resultsPage = document.getElementById("resultsPage");
+
+const loginForm = document.getElementById("loginForm");
+const studentIdInput = document.getElementById("studentId");
+const passwordInput = document.getElementById("password");
+const captchaText = document.getElementById("captchaText");
+const captchaInput = document.getElementById("captchaInput");
+const loginMessage = document.getElementById("loginMessage");
+
+const questionText = document.getElementById("questionText");
+const optionsContainer = document.getElementById("optionsContainer");
+const questionCounter = document.getElementById("questionCounter");
+const questionPalette = document.getElementById("questionPalette");
+const timerDisplay = document.getElementById("timer");
+
+let studentId = "";
+let currentQuestion = 0;
+let answers = [];
+let timeLeft = 600;
+let timerInterval = null;
+let quizFinished = false;
+
+// QUESTIONS
+const questions = [
+    {
+        question: "What does HTML stand for?",
+        options: [
+            "Hyper Text Markup Language",
+            "High Text Machine Language",
+            "Hyper Tool Multi Language",
+            "Home Text Markup Language"
+        ],
+        answer: 0
+    },
+    {
+        question: "Which language is used to style web pages?",
+        options: ["Java", "CSS", "Python", "C"],
+        answer: 1
+    },
+    {
+        question: "Which tag creates a hyperlink in HTML?",
+        options: ["<link>", "<href>", "<a>", "<url>"],
+        answer: 2
+    },
+    {
+        question: "Which symbol is used for an ID selector in CSS?",
+        options: [".", "#", "*", "&"],
+        answer: 1
+    },
+    {
+        question: "Which JavaScript keyword cannot be reassigned?",
+        options: ["var", "let", "const", "static"],
+        answer: 2
+    },
+    {
+        question: "Which method prints a message to the browser console?",
+        options: [
+            "print()",
+            "console.log()",
+            "document.console()",
+            "display()"
+        ],
+        answer: 1
+    },
+    {
+        question: "Which tag represents the largest HTML heading?",
+        options: ["<h6>", "<head>", "<h1>", "<heading>"],
+        answer: 2
+    },
+    {
+        question: "Which CSS property changes text color?",
+        options: [
+            "font-color",
+            "text-color",
+            "color",
+            "background-color"
+        ],
+        answer: 2
+    },
+    {
+        question: "Which array method removes the last element?",
+        options: ["push()", "shift()", "pop()", "join()"],
+        answer: 2
+    },
+    {
+        question: "Which HTML element creates a form?",
+        options: ["<input>", "<form>", "<fieldset>", "<button>"],
+        answer: 1
+    }
+];
+
+// SHOW A PAGE
+function showPage(page) {
+    [loginPage, instructionsPage, quizPage, resultsPage]
+        .forEach(section => section.classList.add("hidden"));
+
+    page.classList.remove("hidden");
+}
+
+// CAPTCHA
+let currentCaptcha = "";
+
+function generateCaptcha() {
+    const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    currentCaptcha = "";
+
+    for (let i = 0; i < 5; i++) {
+        currentCaptcha += characters[
+            Math.floor(Math.random() * characters.length)
+        ];
+    }
+
+    captchaText.textContent = currentCaptcha;
+}
+
+generateCaptcha();
+
+document.getElementById("refreshCaptcha").addEventListener("click", () => {
+    generateCaptcha();
+    captchaInput.value = "";
+    loginMessage.textContent = "";
+});
+
+// LOGIN
+loginForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const enteredId = studentIdInput.value.trim();
+    const enteredPassword = passwordInput.value;
+    const enteredCaptcha = captchaInput.value.trim().toUpperCase();
+
+    if (enteredId !== "STUDENT" || enteredPassword !== "12345") {
+        loginMessage.textContent =
+            "Invalid Student ID or password. Please try again.";
+        generateCaptcha();
+        captchaInput.value = "";
+        return;
+    }
+
+    if (enteredCaptcha !== currentCaptcha) {
+        loginMessage.textContent =
+            "Incorrect CAPTCHA. Please try again.";
+        generateCaptcha();
+        captchaInput.value = "";
+        return;
+    }
+
+    studentId = enteredId;
+    document.getElementById("welcomeName").textContent = studentId;
+    loginMessage.textContent = "";
+
+    showPage(instructionsPage);
+});
+
+// LOGOUT FROM INSTRUCTIONS
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    studentId = "";
+    loginForm.reset();
+    generateCaptcha();
+    showPage(loginPage);
+});
+
+// START QUIZ
+document.getElementById("startQuiz").addEventListener("click", () => {
+    currentQuestion = 0;
+    answers = new Array(questions.length).fill(null);
+    timeLeft = 600;
+    quizFinished = false;
+
+    showPage(quizPage);
+    renderQuestion();
+    startTimer();
+});
+
+// DISPLAY QUESTION
+function renderQuestion() {
+    const question = questions[currentQuestion];
+
+    questionCounter.textContent =
+        "Question " + (currentQuestion + 1) +
+        " of " + questions.length;
+
+    questionText.textContent = question.question;
+    optionsContainer.innerHTML = "";
+
+    question.options.forEach((option, index) => {
+        const label = document.createElement("label");
+        label.className = "option";
+
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "answer";
+        radio.value = index;
+        radio.checked = answers[currentQuestion] === index;
+
+        radio.addEventListener("change", () => {
+            answers[currentQuestion] = index;
+            renderPalette();
+        });
+
+        const text = document.createElement("span");
+        text.textContent = option;
+
+        label.appendChild(radio);
+        label.appendChild(text);
+        optionsContainer.appendChild(label);
+    });
+
+    document.getElementById("previousBtn").disabled =
+        currentQuestion === 0;
+
+    document.getElementById("nextBtn").disabled =
+        currentQuestion === questions.length - 1;
+
+    renderPalette();
+}
+
+// QUESTION PALETTE
+function renderPalette() {
+    questionPalette.innerHTML = "";
+
+    questions.forEach((question, index) => {
+        const button = document.createElement("button");
+        button.className = "palette-button";
+        button.textContent = index + 1;
+        button.type = "button";
+
+        if (answers[index] !== null) {
+            button.classList.add("answered");
+        }
+
+        if (index === currentQuestion) {
+            button.classList.add("current");
+        }
+
+        button.addEventListener("click", () => {
+            currentQuestion = index;
+            renderQuestion();
+        });
+
+        questionPalette.appendChild(button);
+    });
+}
+
+// PREVIOUS AND NEXT
+document.getElementById("previousBtn").addEventListener("click", () => {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion();
+    }
+});
+
+document.getElementById("nextBtn").addEventListener("click", () => {
+    if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        renderQuestion();
+    }
+});
+
+// TIMER
+function startTimer() {
+    clearInterval(timerInterval);
+    updateTimerDisplay();
+
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            submitQuiz(true);
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+
+    timerDisplay.textContent =
+        String(minutes).padStart(2, "0") + ":" +
+        String(seconds).padStart(2, "0");
+}
+
+// SUBMIT QUIZ
+document.getElementById("submitBtn").addEventListener("click", () => {
+    const unanswered = answers.filter(answer => answer === null).length;
+
+    if (unanswered > 0) {
+        const confirmSubmit = confirm(
+            "You have " + unanswered +
+            " unanswered question(s). Submit anyway?"
+        );
+
+        if (!confirmSubmit) return;
+    }
+
+    submitQuiz(false);
+});
+
+function submitQuiz(autoSubmitted) {
+    if (quizFinished) return;
+
+    quizFinished = true;
+    clearInterval(timerInterval);
+
+    let totalScore = 0;
+
+    questions.forEach((question, index) => {
+        if (answers[index] === question.answer) {
+            totalScore++;
+        }
+    });
+
+    document.getElementById("resultName").textContent =
+        "Student ID: " + studentId;
+
+    document.getElementById("score").textContent =
+        totalScore + "/" + questions.length;
+
+    document.getElementById("resultMessage").textContent =
+        autoSubmitted
+            ? "Time is up! Your quiz was submitted automatically."
+            : "Quiz submitted successfully!";
+
+    showReview();
+    showPage(resultsPage);
+}
+
+// ANSWER REVIEW
+function showReview() {
+    const reviewContainer = document.getElementById("reviewContainer");
+    reviewContainer.innerHTML = "<h3>Answer Review</h3>";
+
+    questions.forEach((question, index) => {
+        const item = document.createElement("div");
+
+        const isCorrect = answers[index] === question.answer;
+        item.className = "review-item " +
+            (isCorrect ? "correct" : "incorrect");
+
+        const title = document.createElement("strong");
+        title.textContent =
+            (index + 1) + ". " + question.question;
+
+        const yourAnswer = document.createElement("p");
+        yourAnswer.textContent = "Your answer: " +
+            (answers[index] === null
+                ? "Not answered"
+                : question.options[answers[index]]);
+
+        const correctAnswer = document.createElement("p");
+        correctAnswer.textContent =
+            "Correct answer: " + question.options[question.answer];
+
+        item.appendChild(title);
+        item.appendChild(yourAnswer);
+        item.appendChild(correctAnswer);
+
+        reviewContainer.appendChild(item);
+    });
+}
+
+// RETURN TO LOGIN
+document.getElementById("restartBtn").addEventListener("click", () => {
+    clearInterval(timerInterval);
+
+    studentId = "";
+    currentQuestion = 0;
+    answers = [];
+    timeLeft = 600;
+    quizFinished = false;
+
+    loginForm.reset();
+    captchaInput.value = "";
+    loginMessage.textContent = "";
+
+    generateCaptcha();
+    showPage(loginPage);
+});
+</script>
+
+</body>
+</html>
